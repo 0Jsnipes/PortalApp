@@ -1,8 +1,8 @@
-// File: src/components/home/VideoCarousel.jsx
 import React from "react";
+import dogtip1 from "../assets/dogtip1.mp4"
 
 const videos = [
-  "https://www.youtube.com/embed/dQw4w9WgXcQ", // Replace with real video links
+  dogtip1, // Replace with real video links
   "https://www.youtube.com/embed/3GwjfUFyY6M",
   "https://www.youtube.com/embed/2Vv-BfVoq4g",
   "https://www.youtube.com/embed/kJQP7kiw5Fk",
@@ -22,7 +22,7 @@ const VideoCarousel = () => {
             title={`Animal Tip ${index + 1}`}
             className="w-full h-64 rounded-lg"
             allow="autoplay"
-          />
+          ></iframe>
         ))}
       </div>
     </div>

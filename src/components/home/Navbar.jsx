@@ -1,24 +1,52 @@
 // File: src/components/home/Navbar.jsx
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const Navbar = () => {
+const Navbar = ({ logout }) => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout(); // Call the logout function passed as a prop
+    navigate("/"); // Redirect to the login page
+  };
+
   return (
     <nav className="bg-gray-800 py-4">
       <div className="container mx-auto flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Mebane Vet Clinic</h1>
+        {/* Logo/Title */}
+        <h1
+          className="text-2xl font-bold cursor-pointer text-white hover:text-indigo-400"
+          onClick={() => navigate("/home")}
+        >
+          Mebane Vet Clinic
+        </h1>
+
+        {/* Navigation Links */}
         <ul className="flex space-x-6">
-          {["Profile", "Visits", "Vaccines", "Message"].map((item) => (
-            <li key={item}>
-              <Link
-                to={`/${item.toLowerCase()}`}
-                className="text-white hover:text-indigo-400"
-              >
-                {item}
-              </Link>
-            </li>
-          ))}
+          <li>
+            <Link to="/home" className="text-white hover:text-indigo-400">
+              Home
+            </Link>
+          </li>
+          <li>
+            <Link to="/profile" className="text-white hover:text-indigo-400">
+              Profile
+            </Link>
+          </li>
+          <li>
+            <Link to="/visits" className="text-white hover:text-indigo-400">
+              Visits
+            </Link>
+          </li>
         </ul>
+
+        {/* Logout Button */}
+        <button
+          onClick={handleLogout}
+          className="text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition"
+        >
+          Logout
+        </button>
       </div>
     </nav>
   );

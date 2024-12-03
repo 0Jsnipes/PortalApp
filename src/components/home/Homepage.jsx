@@ -10,11 +10,10 @@ import Footer from "./Footer";
 const Homepage = () => {
   return (
     <div className="bg-gray-900 text-white min-h-screen">
-      <Navbar />
       <div
         className="bg-cover bg-center h-[60vh] relative"
         style={{
-          backgroundImage: `url('https://placekitten.com/1200/600')`, // Replace with a dogs-playing image
+          backgroundImage: `url('https://thumbs.dreamstime.com/b/young-happy-veterinarians-examining-dog-clinic-vet-166151931.jpg')`, // Replace with a dogs-playing image
         }}
       >
         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
