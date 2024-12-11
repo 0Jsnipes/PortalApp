@@ -1,4 +1,3 @@
-// File: src/components/home/Homepage.jsx
 import React from "react";
 import Navbar from "./Navbar";
 import Events from "./Events";

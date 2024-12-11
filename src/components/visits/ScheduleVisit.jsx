@@ -5,77 +5,76 @@ import "react-datepicker/dist/react-datepicker.css";
 const doctors = [
   {
     name: "Dr. Smith",
-    availability: {
-      "2023-12-01": ["9:00 AM", "10:30 AM", "2:00 PM"],
-      "2023-12-05": ["11:00 AM", "1:30 PM"],
-      "2023-12-08": ["10:00 AM", "3:00 PM"],
-    },
+    availability: ["2023-12-01", "2023-12-05", "2023-12-08"],
+    times: ["9:00 AM", "10:30 AM", "2:00 PM"],
   },
   {
     name: "Dr. Johnson",
-    availability: {
-      "2023-12-02": ["8:00 AM", "9:30 AM", "3:30 PM"],
-      "2023-12-06": ["12:00 PM", "4:00 PM"],
-      "2023-12-10": ["10:30 AM", "2:30 PM"],
-    },
+    availability: ["2023-12-02", "2023-12-06", "2023-12-10"],
+    times: ["8:00 AM", "9:30 AM", "3:30 PM"],
   },
   {
     name: "Dr. Lee",
-    availability: {
-      "2023-12-03": ["9:00 AM", "1:00 PM", "4:00 PM"],
-      "2023-12-07": ["11:00 AM", "3:00 PM"],
-      "2023-12-12": ["8:30 AM", "2:00 PM"],
-    },
+    availability: ["2023-12-03", "2023-12-07", "2023-12-12"],
+    times: ["9:00 AM", "1:00 PM", "4:00 PM"],
   },
 ];
 
 const ScheduleVisit = () => {
-  const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [selectedDoctor, setSelectedDoctor] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedTime, setSelectedTime] = useState(null);
+  const [selectedTime, setSelectedTime] = useState("");
   const [appointment, setAppointment] = useState(null);
 
-  // Get available dates for the selected doctor
-  const availableDates =
-    selectedDoctor &&
-    Object.keys(
-      doctors.find((doc) => doc.name === selectedDoctor)?.availability || {}
-    );
+  // Get available dates for the selected doctor and convert them to UTC dates
+  const availableDates = selectedDoctor
+    ? doctors.find((doc) => doc.name === selectedDoctor)?.availability.map(
+        (date) => {
+          const [year, month, day] = date.split("-");
+          const utcDate = new Date(Date.UTC(year, month - 1, day));
+          utcDate.setUTCHours(19, 0, 0, 0); // had to  change time to make it the correct date
+          return utcDate;
+        }
+      )
+    : [];
 
-  // Get available times for the selected date
-  const availableTimes =
-    selectedDoctor && selectedDate
-      ? doctors.find((doc) => doc.name === selectedDoctor)?.availability[
-          selectedDate.toISOString().split("T")[0]
-        ] || []
-      : [];
+  // Get available times for the selected doctor
+  const availableTimes = selectedDoctor
+    ? doctors.find((doc) => doc.name === selectedDoctor)?.times
+    : [];
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (selectedDoctor && selectedDate && selectedTime) {
       setAppointment({
         doctor: selectedDoctor,
-        date: selectedDate.toDateString(),
+        date: selectedDate.toUTCString(), // Display the date in UTC format
         time: selectedTime,
       });
+
+      // Clear the form fields after submission
+      setSelectedDoctor("");
+      setSelectedDate(null);
+      setSelectedTime("");
     }
   };
 
   return (
-    <div>
+    <div className="bg-gray-800 p-6 rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold mb-4 text-white">Schedule Your Visit</h2>
       <form onSubmit={handleSubmit}>
         {/* Doctor Selection */}
-        <label htmlFor="doctor" className="block mb-2 font-medium">
+        <label htmlFor="doctor" className="block mb-2 font-medium text-white">
           Select a Doctor
         </label>
         <select
           id="doctor"
           className="w-full bg-gray-700 text-white p-2 rounded-md mb-4"
-          value={selectedDoctor || ""}
+          value={selectedDoctor}
           onChange={(e) => {
             setSelectedDoctor(e.target.value);
             setSelectedDate(null);
-            setSelectedTime(null); // Reset date and time when doctor changes
+            setSelectedTime("");
           }}
         >
           <option value="" disabled>
@@ -88,10 +87,10 @@ const ScheduleVisit = () => {
           ))}
         </select>
 
-        {/* Date Picker */}
-        {selectedDoctor && (
+        {/* Date Selection with DatePicker */}
+        {selectedDoctor && availableDates.length > 0 && (
           <>
-            <label htmlFor="date" className="block mb-2 font-medium">
+            <label htmlFor="date" className="block mb-2 font-medium text-white">
               Select a Date
             </label>
             <DatePicker
@@ -99,25 +98,25 @@ const ScheduleVisit = () => {
               selected={selectedDate}
               onChange={(date) => {
                 setSelectedDate(date);
-                setSelectedTime(null); // Reset time when date changes
+                setSelectedTime("");
               }}
-              includeDates={availableDates.map((date) => new Date(date))}
-              className="w-full bg-gray-700 text-white p-2 rounded-md"
+              includeDates={availableDates}
+              className="w-full bg-gray-700 text-white p-2 rounded-md mb-4"
               placeholderText="Click to select a date"
             />
           </>
         )}
 
-        {/* Time Picker */}
-        {selectedDoctor && selectedDate && (
+        {/* Time Selection Dropdown */}
+        {selectedDoctor && selectedDate && availableTimes.length > 0 && (
           <>
-            <label htmlFor="time" className="block mt-4 mb-2 font-medium">
+            <label htmlFor="time" className="block mt-4 mb-2 font-medium text-white">
               Select a Time
             </label>
             <select
               id="time"
               className="w-full bg-gray-700 text-white p-2 rounded-md mb-4"
-              value={selectedTime || ""}
+              value={selectedTime}
               onChange={(e) => setSelectedTime(e.target.value)}
             >
               <option value="" disabled>

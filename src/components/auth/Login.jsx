@@ -1,4 +1,3 @@
-// File: src/components/auth/Login.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -11,8 +10,8 @@ const Login = ({ onLogin }) => {
   const handleLogin = (e) => {
     e.preventDefault();
 
-    // Replace this logic with actual backend authentication
-    if (email === "user@mebane.com" && password === "password123") {
+    // Replace this logic with auth uploading it like this to demo the site
+    if (email && password) {
       onLogin(); // Trigger login
       navigate("/home"); // Navigate to Homepage
     } else {

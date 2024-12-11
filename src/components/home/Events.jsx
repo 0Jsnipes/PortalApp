@@ -1,4 +1,3 @@
-// File: src/components/home/Events.jsx
 import React from "react";
 
 const Events = () => {

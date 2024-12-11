@@ -1,12 +1,11 @@
-// File: src/components/home/Navbar.jsx
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-const Navbar = ({ logout }) => {
+const Navbar = ({ onLogout }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    logout(); // Call the logout function passed as a prop
+    onLogout(); // Call the logout function passed as a prop
     navigate("/"); // Redirect to the login page
   };
 
